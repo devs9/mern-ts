@@ -1,0 +1,24 @@
+# Dependence Files
+.idea
+node_modules
+
+# Env Variables
+env/.env.dev
+env/.env.prod
+
+# Testing Files
+coverage
+
+# Production Files
+dist
+# client
+
+# Logs
+logs/
+
+# Misc
+.DS_Store
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

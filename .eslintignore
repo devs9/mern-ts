@@ -1,0 +1,14 @@
+# Build Files
+.git
+dist
+client
+node_modules
+
+# Testing Files
+coverage/*
+
+# Data Definition Files
+**/*.d.ts
+
+# Custom Files
+jest.config.js

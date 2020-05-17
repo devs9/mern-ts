@@ -1,0 +1,21 @@
+# EditorConfig is awesome: https://editorconfig.org/
+
+# top-most EditorConfig file
+root = true
+
+[*.md]
+trim_trailing_whitespace = false
+
+[*.js]
+trim_trailing_whitespace = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+charset = utf-8
+
+indent_size = 2
+indent_style = space
+
+end_of_line = lf
+max_line_length = 100
+insert_final_newline = true
