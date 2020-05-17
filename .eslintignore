@@ -1,0 +1,11 @@
+# Build Files
+dist/*
+
+# Testing Files
+coverage/*
+
+# Data Definition Files
+**/*.d.ts
+
+# Custom Files
+jest.config.js
