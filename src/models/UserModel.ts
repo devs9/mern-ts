@@ -4,14 +4,11 @@ import {IUser} from "../interfaces"
 const userSchema = new Schema(
   {
     token: String,
+    password: String,
 
     google: String,
     twitter: String,
     facebook: String,
-
-    password: String,
-    passwordResetToken: String,
-    passwordResetExpires: Date,
 
     profile: {
       image: String,
@@ -27,6 +24,4 @@ const userSchema = new Schema(
   {timestamps: true}
 )
 
-const userModel = model<IUser & Document>("User", userSchema)
-
-export default userModel
+export const UserModel = model<IUser & Document>("User", userSchema)

@@ -1,12 +1,14 @@
-import * as bcrypt from "bcrypt"
+import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken"
+
+import {UserModel} from "../models"
+import AppError from "../app/appError"
+import {isEmptyObject} from "../utils"
 import {CreateUserDto} from "../validations/dtos/users.dto"
 import {IUser} from "../interfaces"
-import userModel from "../models/users.model"
-import {isEmptyObject} from "../utils/util"
-import AppError from "../app/appError"
 
 class UserService {
-  public users = userModel
+  public users = UserModel
 
   public async findAllUser(): Promise<IUser[]> {
     const users: IUser[] = await this.users.find()

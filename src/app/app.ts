@@ -59,10 +59,10 @@ export default class App {
   }
 
   private appConfig() {
+    this.app.use(cookieParser())
     this.app.use(express.json())
     this.app.use(express.static(buildPath))
     this.app.use(express.urlencoded({extended: true}))
-    this.app.use(cookieParser())
   }
 
   private initMiddleware() {
@@ -98,9 +98,9 @@ export default class App {
 
     mongoose.connect(`mongodb://${MONGO_URI}`, {...options})
     mongoose.connection.on("error", () => {
-      console.error("🔥 Error connect to DB 🟥")
+      logger.error("🔥 Error connect to DB 🟥")
       process.exit(1)
     })
-    mongoose.connection.once("open", () => console.info("✅  Success connect to DB ✅ "))
+    mongoose.connection.once("open", () => logger.info("✅  Success connect to DB ✅ "))
   }
 }

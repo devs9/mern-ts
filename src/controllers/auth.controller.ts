@@ -11,20 +11,27 @@ class AuthController {
     const userData: CreateUserDto = req.body
 
     try {
-      const signUpUserData: IUser = await this.authService.signup(userData)
-      res.status(201).json({data: signUpUserData, message: "signup"})
+      const signUpUserData: IUser = await this.authService.sign_up({
+        ...userData,
+        login: userData.login || userData.email
+      })
+      const tokenData = this.authService.createToken(signUpUserData)
+      const cookie = this.authService.createCookie(tokenData)
+
+      res.setHeader("Set-Cookie", [cookie])
+      res.status(201).json({data: signUpUserData, status: "Success! sign_up"})
     } catch (error) {
       next(error)
     }
   }
 
-  public logIn = async (req: Request, res: Response, next: NextFunction) => {
+  public sign_in = async (req: Request, res: Response, next: NextFunction) => {
     const userData: CreateUserDto = req.body
 
     try {
-      const {cookie, findUser} = await this.authService.login(userData)
+      const {cookie, findUser} = await this.authService.sign_in(userData)
       res.setHeader("Set-Cookie", [cookie])
-      res.status(200).json({data: findUser, message: "login"})
+      res.status(200).json({data: findUser, status: "Success! sign_in"})
     } catch (error) {
       next(error)
     }

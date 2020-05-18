@@ -6,8 +6,6 @@ export default function validateEnv() {
     NODE_ENV: str(),
 
     MONGO_URI: str(),
-    MONGO_USER: str(),
-    MONGO_PASSWORD: str(),
 
     FACEBOOK_ID: str(),
     FACEBOOK_SECRET: str(),

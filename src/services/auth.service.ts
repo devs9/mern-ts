@@ -1,32 +1,42 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
+import {UserModel} from "../models"
 import AppError from "../app/appError"
 import {isEmptyObject} from "../utils"
-import userModel from "../models/users.model"
 import {CreateUserDto} from "../validations/dtos/users.dto"
 import {DataStoredInToken, TokenData} from "../interfaces/auth.interface"
 import {IUser} from "../interfaces"
 
 class AuthService {
-  public users = userModel
+  public users = UserModel
 
-  public async signup(userData: CreateUserDto): Promise<IUser> {
+  public async sign_up(userData: CreateUserDto): Promise<IUser> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
+    const {email, login} = userData
 
-    const findUser: IUser = await this.users.findOne({email: userData.email})
-    if (findUser) throw new AppError(409, `You're email ${userData.email} already exists`)
+    const findUser: IUser = await this.users.findOne({email})
+    if (findUser) throw new AppError(409, `You're email ${email} already exists`)
+
+    const findLogin: IUser = await this.users.findOne({login})
+    if (findLogin) throw new AppError(409, `You're login ${login} already exists`)
 
     const hashedPassword = await bcrypt.hash(userData.password, 10)
-    const createUserData: IUser = await this.users.create({...userData, password: hashedPassword})
 
-    return createUserData
+    return await this.users.create({
+      ...userData,
+      password: hashedPassword
+    })
   }
 
-  public async login(userData: CreateUserDto): Promise<{cookie: string; findUser: IUser}> {
+  public async sign_in(userData: CreateUserDto): Promise<{cookie: string; findUser: IUser}> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
 
-    const findUser: IUser = await this.users.findOne({email: userData.email})
+    const findLogin: IUser = await this.users.findOne({login: userData.login})
+    if (!findLogin) throw new AppError(409, `You're login ${userData.login} not found`)
+
+    const findEmail: IUser = await this.users.findOne({email: userData.email})
+    const findUser = findLogin || findEmail
     if (!findUser) throw new AppError(409, `You're email ${userData.email} not found`)
 
     const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password)

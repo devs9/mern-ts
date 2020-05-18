@@ -1,5 +1,5 @@
 {
-  "name": "typescript-express-starter",
+  "name": "@devs9/mern-ts",
   "version": "0.0.1",
   "scripts": {
     "build-ts": "tsc",
