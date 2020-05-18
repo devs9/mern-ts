@@ -14,7 +14,7 @@ dist
 # client
 
 # Logs
-logs/debug.log
+logs/
 
 # Misc
 .DS_Store

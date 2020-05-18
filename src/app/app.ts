@@ -7,9 +7,9 @@ import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
 import express, {Application} from "express"
 
-import validateEnv from "../utils/validateEnv"
+import {validateEnv, logger} from "../utils"
 import {envDev, buildPath, htmlPath} from "../constants"
-import {appError} from "../middlewares/appError"
+import appError from "../middlewares/error.middleware"
 import Routes from "../interfaces/routes.interface"
 
 export default class App {
@@ -42,7 +42,9 @@ export default class App {
 
   public listen() {
     this.app.listen(this.port, () => {
-      console.log(`🚀 App listening on the port ${this.port}`)
+      logger.info(
+        `🚀 App Mode ${this.app.get("env")} is running at http://localhost:${this.port} 🚀`
+      )
     })
   }
 

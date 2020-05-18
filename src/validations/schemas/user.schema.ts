@@ -3,7 +3,7 @@ import * as Joi from "@hapi/joi"
 /**
  * User Schema Sign Up
  */
-export const signUp = Joi.object({
+export const signUpSchema = Joi.object({
   password: Joi.string().required(),
   email: Joi.string().email().required(),
   login: Joi.string().min(4).max(44),
@@ -15,7 +15,7 @@ export const signUp = Joi.object({
 /**
  * User Schema Sign In
  */
-export const signIn = Joi.object({
+export const signInSchema = Joi.object({
   password: Joi.string().required(),
   login: Joi.string().min(4).max(44).required()
 })

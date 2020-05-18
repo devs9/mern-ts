@@ -1,10 +1,15 @@
 import jwt from "jsonwebtoken"
 import {NextFunction, Response} from "express"
-import AppError from "../app/appError"
-import {DataStoredInToken, RequestWithUser} from "../interfaces/auth.interface"
-import userModel from "../models/users.model"
 
-async function authMiddleware(req: RequestWithUser, res: Response, next: NextFunction) {
+import AppError from "../app/appError"
+import userModel from "../models/users.model"
+import {DataStoredInToken, RequestWithUser} from "../interfaces/auth.interface"
+
+export default async function authMiddleware(
+  req: RequestWithUser,
+  res: Response,
+  next: NextFunction
+) {
   const cookies = req.cookies
 
   if (cookies && cookies.Authorization) {
@@ -28,5 +33,3 @@ async function authMiddleware(req: RequestWithUser, res: Response, next: NextFun
     next(new AppError(404, "Authentication token missing"))
   }
 }
-
-export default authMiddleware

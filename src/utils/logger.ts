@@ -1,27 +1,22 @@
-import winston from "winston"
-
-/**
- * Logger Options
- */
-const options: winston.LoggerOptions = {
-  transports: [
-    new winston.transports.Console({
-      level: process.env.NODE_ENV === "production" ? "error" : "debug"
-    }),
-    new winston.transports.File({
-      level: "debug",
-      filename: "logs/debug.log"
-    })
-  ]
-}
+import {createLogger, transports} from "winston"
 
 /**
  * App Logger
  */
-const logger = winston.createLogger(options)
+const logger = createLogger({
+  transports: [
+    new transports.Console({
+      level: process.env.NODE_ENV === "production" ? "error" : "debug"
+    }),
+    new transports.File({
+      level: "error",
+      filename: "logs/debug.log"
+    })
+  ]
+})
 
 if (process.env.NODE_ENV !== "production") {
-  logger.info("🚀 INFO LOGGER STARTS 🚀")
+  logger.info("🚀 LOGGER STARTS DEBUG! 🚀")
 }
 
 export default logger

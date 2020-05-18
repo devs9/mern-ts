@@ -1,5 +1,5 @@
 import {Request} from "express"
-import {User} from "./users.interface"
+import {IUser} from "./models"
 
 export interface DataStoredInToken {
   _id: string
@@ -11,5 +11,5 @@ export interface TokenData {
 }
 
 export interface RequestWithUser extends Request {
-  user: User
+  user: IUser
 }

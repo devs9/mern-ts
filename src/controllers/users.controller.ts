@@ -1,14 +1,14 @@
 import {NextFunction, Request, Response} from "express"
 import {CreateUserDto} from "../validations/dtos/users.dto"
-import {User} from "../interfaces/users.interface"
-import userService from "../services/users.service"
+import UserService from "../services/users.service"
+import {IUser} from "../interfaces"
 
 class UsersController {
-  public userService = new userService()
+  public userService = new UserService()
 
   public getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllUsersData: User[] = await this.userService.findAllUser()
+      const findAllUsersData: IUser[] = await this.userService.findAllUser()
       res.status(200).json({data: findAllUsersData, message: "findAll"})
     } catch (error) {
       next(error)
@@ -19,7 +19,7 @@ class UsersController {
     const userId: string = req.params.id
 
     try {
-      const findOneUserData: User = await this.userService.findUserById(userId)
+      const findOneUserData: IUser = await this.userService.findUserById(userId)
       res.status(200).json({data: findOneUserData, message: "findOne"})
     } catch (error) {
       next(error)
@@ -30,7 +30,7 @@ class UsersController {
     const userData: CreateUserDto = req.body
 
     try {
-      const createUserData: User = await this.userService.createUser(userData)
+      const createUserData: IUser = await this.userService.createUser(userData)
       res.status(201).json({data: createUserData, message: "created"})
     } catch (error) {
       next(error)
@@ -39,10 +39,10 @@ class UsersController {
 
   public updateUser = async (req: Request, res: Response, next: NextFunction) => {
     const userId: string = req.params.id
-    const userData: User = req.body
+    const userData: IUser = req.body
 
     try {
-      const updateUserData: User = await this.userService.updateUser(userId, userData)
+      const updateUserData: IUser = await this.userService.updateUser(userId, userData)
       res.status(200).json({data: updateUserData, message: "updated"})
     } catch (error) {
       next(error)
@@ -53,7 +53,7 @@ class UsersController {
     const userId: string = req.params.id
 
     try {
-      const deleteUserData: User = await this.userService.deleteUserData(userId)
+      const deleteUserData: IUser = await this.userService.deleteUserData(userId)
       res.status(200).json({data: deleteUserData, message: "deleted"})
     } catch (error) {
       next(error)
