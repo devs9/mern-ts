@@ -1,17 +1,16 @@
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
+import {AppError} from "../app"
 import {UserModel} from "../models"
-import AppError from "../app/appError"
 import {isEmptyObject} from "../utils"
-import {CreateUserDto} from "../validations/dtos/users.dto"
-import {DataStoredInToken, TokenData} from "../interfaces/auth.interface"
-import {IUser} from "../interfaces"
+import {UserSignInDto, UserSignUpDto} from "../validations"
+import {IUser, dataIDT, tokenDataT} from "../interfaces"
 
 class AuthService {
   public users = UserModel
 
-  public async sign_up(userData: CreateUserDto): Promise<IUser> {
+  public async sign_up(userData: UserSignUpDto): Promise<IUser> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
     const {email, login} = userData
 
@@ -29,15 +28,15 @@ class AuthService {
     })
   }
 
-  public async sign_in(userData: CreateUserDto): Promise<{cookie: string; findUser: IUser}> {
+  public async sign_in(userData: UserSignInDto): Promise<{cookie: string; findUser: IUser}> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
 
     const findLogin: IUser = await this.users.findOne({login: userData.login})
     if (!findLogin) throw new AppError(409, `You're login ${userData.login} not found`)
 
-    const findEmail: IUser = await this.users.findOne({email: userData.email})
+    const findEmail: IUser = await this.users.findOne({email: userData.login})
     const findUser = findLogin || findEmail
-    if (!findUser) throw new AppError(409, `You're email ${userData.email} not found`)
+    if (!findUser) throw new AppError(409, `You're email ${userData.login} not found`)
 
     const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password)
     if (!isPasswordMatching) throw new AppError(409, "You're password not matching")
@@ -57,15 +56,15 @@ class AuthService {
     return findUser
   }
 
-  public createToken(user: IUser): TokenData {
-    const dataStoredInToken: DataStoredInToken = {_id: user._id}
+  public createToken(user: IUser): tokenDataT {
+    const dataStoredInToken: dataIDT = {_id: user._id}
     const secret: string = process.env.JWT_SECRET
     const expiresIn: number = 60 * 60
 
     return {expiresIn, token: jwt.sign(dataStoredInToken, secret, {expiresIn})}
   }
 
-  public createCookie(tokenData: TokenData): string {
+  public createCookie(tokenData: tokenDataT): string {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
   }
 }

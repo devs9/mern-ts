@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import App from '../app';
 import AuthRoute from '../routes/auth.route';
-import { CreateUserDto } from '../validations/dtos/users.dto';
+import {UserSignUpDto} from '../validations';
 // import AppError from '../app/appError';
 // import { TokenData } from '../interfaces/auth.interface';
 // import AuthService from '../services/auth.service';
@@ -15,7 +15,7 @@ afterAll(async () => {
 describe('Testing AuthController', () => {
   describe('POST /sign_up', () => {
     it('response should have the Create userData', () => {
-      const userData: CreateUserDto = {
+      const userData: UserSignUpDto = {
         email: 's2232a5w232131@mail.ru',
         password: '11111',
         name: "devs9"

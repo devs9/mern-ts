@@ -7,18 +7,19 @@ import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
 import express, {Application} from "express"
 
-import {validateEnv, logger} from "../utils"
-import {envDev, buildPath, htmlPath} from "../constants"
-import appError from "../middlewares/error.middleware"
-import Routes from "../interfaces/routes.interface"
+import logger from "../utils"
+import {Path} from "../constants"
+import {appError} from "../middlewares"
+import {validateEnv} from "../validations"
+import {IRoutes} from "../interfaces"
 
 export default class App {
   public app: Application
   public port: string | number
   public env: boolean
 
-  constructor(routes: Routes[]) {
-    App.setEnv()
+  constructor(routes: IRoutes[]) {
+    App.processEnvConfig()
     this.app = express()
     this.port = process.env.PORT || 3000
     this.env = process.env.NODE_ENV === "production"
@@ -30,14 +31,26 @@ export default class App {
     this.errorHandlingConfig()
   }
 
-  private static setEnv() {
-    if (process.env.NODE_ENV === "production") {
-      dotenv.config({path: envDev})
-    } else {
-      dotenv.config({path: envDev})
-    }
+  private static processEnvConfig() {
+    switch (process.env.NODE_ENV) {
+      case "production": {
+        dotenv.config({path: Path.envProd})
+        validateEnv()
+        break
+      }
 
-    validateEnv()
+      case "development": {
+        dotenv.config({path: Path.envTest})
+        validateEnv()
+        break
+      }
+
+      default: {
+        dotenv.config({path: Path.envDev})
+        validateEnv()
+        break
+      }
+    }
   }
 
   public listen() {
@@ -50,7 +63,7 @@ export default class App {
 
   public reactApp() {
     this.app.get("*", (req, res) => {
-      res.sendFile(htmlPath)
+      res.sendFile(Path.htmlPath)
     })
   }
 
@@ -61,7 +74,7 @@ export default class App {
   private appConfig() {
     this.app.use(cookieParser())
     this.app.use(express.json())
-    this.app.use(express.static(buildPath))
+    this.app.use(express.static(Path.buildPath))
     this.app.use(express.urlencoded({extended: true}))
   }
 
@@ -77,7 +90,7 @@ export default class App {
     }
   }
 
-  private initializeRoutes(routes: Routes[]) {
+  private initializeRoutes(routes: IRoutes[]) {
     routes.forEach((route) => {
       this.app.use("/", route.router)
     })
@@ -96,7 +109,7 @@ export default class App {
       useFindAndModify: false
     }
 
-    mongoose.connect(`mongodb://${MONGO_URI}`, {...options})
+    mongoose.connect(`${MONGO_URI}`, options)
     mongoose.connection.on("error", () => {
       logger.error("🔥 Error connect to DB 🟥")
       process.exit(1)

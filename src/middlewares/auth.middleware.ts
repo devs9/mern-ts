@@ -1,22 +1,18 @@
 import jwt from "jsonwebtoken"
 import {NextFunction, Response} from "express"
 
+import {AppError} from "../app"
 import {UserModel} from "../models"
-import AppError from "../app/appError"
-import {DataStoredInToken, RequestWithUser} from "../interfaces/auth.interface"
+import {IReqWithUser, dataIDT} from "../interfaces"
 
-export default async function authMiddleware(
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) {
+export default async function authMiddleware(req: IReqWithUser, res: Response, next: NextFunction) {
   const cookies = req.cookies
 
   if (cookies && cookies.Authorization) {
     const secret = process.env.JWT_SECRET
 
     try {
-      const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken
+      const verificationResponse = jwt.verify(cookies.Authorization, secret) as dataIDT
       const userId = verificationResponse._id
       const findUser = await UserModel.findById(userId)
 

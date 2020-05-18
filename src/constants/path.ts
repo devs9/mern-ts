@@ -5,5 +5,8 @@ export const buildPath = path.join(__dirname, "../../client")
 export const htmlPath = path.join(buildPath, "index.html")
 
 /** ----- ENV Path ----- **/
-export const envDev = path.join(__dirname, "../../env/.env")
-export const envProd = path.join(__dirname, "../../env/.env.prod")
+const envPath = path.join(__dirname, "../../env")
+
+export const envDev = path.join(envPath, "/.env")
+export const envProd = path.join(envPath, "/.env.prod")
+export const envTest = path.join(envPath, "/.env.test")

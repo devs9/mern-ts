@@ -1,1 +1,1 @@
-export * from "./path"
+export * as Path from "./path"

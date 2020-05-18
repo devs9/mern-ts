@@ -1,9 +1,10 @@
 import {NextFunction, Request, Response} from "express"
-import {CreateUserDto} from "../validations/dtos/users.dto"
-import UserService from "../services/users.service"
-import {IUser} from "../interfaces"
 
-class UsersController {
+import {UserSignUpDto} from "../validations"
+import {IUser} from "../interfaces"
+import UserService from "../services/users.service"
+
+export default class UsersController {
   public userService = new UserService()
 
   public getUsers = async (req: Request, res: Response, next: NextFunction) => {
@@ -27,7 +28,7 @@ class UsersController {
   }
 
   public createUser = async (req: Request, res: Response, next: NextFunction) => {
-    const userData: CreateUserDto = req.body
+    const userData: UserSignUpDto = req.body
 
     try {
       const createUserData: IUser = await this.userService.createUser(userData)
@@ -60,5 +61,3 @@ class UsersController {
     }
   }
 }
-
-export default UsersController
