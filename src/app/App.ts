@@ -22,6 +22,8 @@ export default class App {
     this.port = process.env.PORT || 3000
     this.env = process.env.NODE_ENV === "production"
 
+    // this.app.set("origin_uri", "http://localhost:3333")
+
     dbConfig()
     this.appConfig()
     this.initMiddleware()
