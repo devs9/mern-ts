@@ -6,7 +6,7 @@ import {isEmptyObject} from "../utils"
 import {UserSignUpDto} from "../validations"
 import {IUser} from "@TS/Models"
 
-class UserService {
+export default class UserService {
   public users = UserModel
 
   public async findAllUser(): Promise<IUser[]> {
@@ -52,5 +52,3 @@ class UserService {
     return deleteUserById
   }
 }
-
-export default UserService

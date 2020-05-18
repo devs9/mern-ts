@@ -7,26 +7,8 @@ import {isEmptyObject} from "../utils"
 import {UserSignInDto, UserSignUpDto} from "../validations"
 import {IUser, dataIDT, tokenDataT} from "@TS/Models"
 
-class AuthService {
+export default class AuthService {
   public users = UserModel
-
-  public async sign_up(userData: UserSignUpDto): Promise<IUser> {
-    if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
-    const {email, login} = userData
-
-    const findUser: IUser = await this.users.findOne({email})
-    if (findUser) throw new AppError(409, `You're email ${email} already exists`)
-
-    const findLogin: IUser = await this.users.findOne({login})
-    if (findLogin) throw new AppError(409, `You're login ${login} already exists`)
-
-    const hashedPassword = await bcrypt.hash(userData.password, 10)
-
-    return await this.users.create({
-      ...userData,
-      password: hashedPassword
-    })
-  }
 
   public async sign_in(userData: UserSignInDto): Promise<{cookie: string; findUser: IUser}> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
@@ -45,6 +27,24 @@ class AuthService {
     const cookie = this.createCookie(tokenData)
 
     return {cookie, findUser}
+  }
+
+  public async sign_up(userData: UserSignUpDto): Promise<IUser> {
+    if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
+    const {email, login} = userData
+
+    const findUser: IUser = await this.users.findOne({email})
+    if (findUser) throw new AppError(409, `You're email ${email} already exists`)
+
+    const findLogin: IUser = await this.users.findOne({login})
+    if (findLogin) throw new AppError(409, `You're login ${login} already exists`)
+
+    const hashedPassword = await bcrypt.hash(userData.password, 10)
+
+    return await this.users.create({
+      ...userData,
+      password: hashedPassword
+    })
   }
 
   public async logout(userData: IUser): Promise<IUser> {
@@ -68,5 +68,3 @@ class AuthService {
     return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
   }
 }
-
-export default AuthService
