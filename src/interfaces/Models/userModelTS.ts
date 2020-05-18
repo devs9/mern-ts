@@ -17,6 +17,7 @@ export interface IUser {
   _id: string
   login: string
   token: string
+  email: string
   password: string
 
   google: string

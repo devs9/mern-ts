@@ -3,7 +3,6 @@ import {isEmpty} from "lodash"
 
 import {AppError} from "../app"
 import {UserModel} from "../models"
-import {UserSignUpDto} from "../validations"
 import {IUser} from "@TS/Models"
 
 export default class UserService {
@@ -20,7 +19,7 @@ export default class UserService {
     return findUser
   }
 
-  public async createUser(userData: UserSignUpDto): Promise<IUser> {
+  public async createUser(userData: IUser): Promise<IUser> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findUser: IUser = await this.users.findOne({email: userData.email})

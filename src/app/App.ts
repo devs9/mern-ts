@@ -2,13 +2,14 @@ import hpp from "hpp"
 import cors from "cors"
 import helmet from "helmet"
 import morgan from "morgan"
+import compression from "compression"
 import cookieParser from "cookie-parser"
 import express, {Application} from "express"
 
 import logger from "../utils"
 import {Path} from "../constants"
 import {appError} from "../middlewares"
-import {dbConfig, envConfig} from "../config"
+import {dbConnect, envConfig, sessionConfig} from "../config"
 import {IRoutes} from "@TS/Routes"
 
 export default class App {
@@ -19,12 +20,10 @@ export default class App {
   constructor(routes: IRoutes[]) {
     envConfig()
     this.app = express()
-    this.port = process.env.PORT || 3000
+    this.port = process.env.PORT
     this.env = process.env.NODE_ENV === "production"
 
-    // this.app.set("origin_uri", "http://localhost:3333")
-
-    dbConfig()
+    dbConnect()
     this.appConfig()
     this.initMiddleware()
     this.initializeRoutes(routes)
@@ -54,6 +53,8 @@ export default class App {
     this.app.use(express.json())
     this.app.use(express.static(Path.buildPath))
     this.app.use(express.urlencoded({extended: true}))
+    this.app.use(compression({level: 7}))
+    this.app.use(sessionConfig())
   }
 
   private initMiddleware() {

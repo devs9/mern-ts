@@ -1,19 +1,21 @@
-import {connect, connection} from "mongoose"
+import {connect, ConnectionOptions} from "mongoose"
+import {promisify} from "util"
 import logger from "../utils/logger"
 
-export default function dbConfig() {
-  const {MONGO_URI} = process.env
-  const options = {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-  }
+const connectPromisify = promisify<string, ConnectionOptions>(connect)
+export default async function dbConfig() {
+  try {
+    const {MONGO_URI} = process.env
+    const options = {
+      useCreateIndex: true,
+      useNewUrlParser: true,
+      useFindAndModify: false,
+      useUnifiedTopology: true
+    }
 
-  connect(`${MONGO_URI}`, options)
-  connection.on("error", () => {
-    logger.error("🔥 Error connect to DB 🟥")
-    process.exit(1)
-  })
-  connection.once("open", () => logger.info("✅  Success connect to DB ✅ "))
+    await connectPromisify(`${MONGO_URI}`, options)
+    logger.info("✅  Success connect to DB ✅ ")
+  } catch (error) {
+    logger.error(`🔥 Error connect to DB 🟥 ${error} 🟥`)
+  }
 }
