@@ -29,10 +29,14 @@ class AuthService {
     })
   }
 
-  public async login(userData: CreateUserDto): Promise<{cookie: string; findUser: IUser}> {
+  public async sign_in(userData: CreateUserDto): Promise<{cookie: string; findUser: IUser}> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
 
-    const findUser: IUser = await this.users.findOne({email: userData.email})
+    const findLogin: IUser = await this.users.findOne({login: userData.login})
+    if (!findLogin) throw new AppError(409, `You're login ${userData.login} not found`)
+
+    const findEmail: IUser = await this.users.findOne({email: userData.email})
+    const findUser = findLogin || findEmail
     if (!findUser) throw new AppError(409, `You're email ${userData.email} not found`)
 
     const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password)
