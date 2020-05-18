@@ -3,7 +3,6 @@ dist/*
 
 # Testing Files
 coverage/*
-src/tests/*
 
 # Data Definition Files
 **/*.d.ts

@@ -2,8 +2,8 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 import {AppError} from "../app"
-import {isEmptyObject} from "../utils"
 import {UserModel} from "../models"
+import {isEmptyObject} from "../utils"
 import {UserSignInDto, UserSignUpDto} from "../validations"
 import {IUser, dataIDT, tokenDataT} from "@TS/Models"
 

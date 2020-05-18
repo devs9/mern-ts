@@ -13,21 +13,9 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "paths": {
-//      "@app/*": ["./src/app/*"],
-//      "@tests/*": ["./src/tests/*"],
-//      "@config/*": ["./src/config/*"],
-//      "@utils/*": ["./src/utils/*"],
-//      "@models/*": ["./src/models/*"],
-//      "@routes/*": ["./src/routes/*"],
-//      "@schemas/*": ["./src/schemas/*"],
-//      "@services/*": ["./src/services/*"],
-//      "@constants/*": ["./src/constants/*"],
-//      "@validations/*": ["./src/validations/*"],
-//      "@controllers/*": ["./src/controllers/*"],
-//      "@middlewares/*": ["./src/middlewares/*"],
-      "@TS/*": ["./src/interfaces/*"],
+      "@TS/*": ["src/interfaces/*"],
       "*": [
-        "./node_modules/@types"
+        "node_modules/@types"
       ]
     }
   },

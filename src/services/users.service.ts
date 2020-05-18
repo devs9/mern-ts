@@ -1,8 +1,8 @@
 import bcrypt from "bcrypt"
 
 import {AppError} from "../app"
+import {UserModel} from "../models"
 import {isEmptyObject} from "../utils"
-import {UserModel} from "../models/user.model"
 import {UserSignUpDto} from "../validations"
 import {IUser} from "@TS/Models"
 
