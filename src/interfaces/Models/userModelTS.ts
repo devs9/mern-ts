@@ -4,7 +4,6 @@ import {Request} from "express"
  * Type Alias
  * user base types for database
  */
-
 export type dataIDT = {_id: string}
 export type tokenDataT = {
   token: string
@@ -18,6 +17,7 @@ export interface IUser {
   _id: string
   login: string
   token: string
+  email: string
   password: string
 
   google: string

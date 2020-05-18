@@ -3,17 +3,16 @@ import request from "supertest"
 
 import App from "../app"
 import AuthRoute from "../routes/auth.route"
-import {UserSignUpDto} from "../validations"
 
 afterAll(async () => {
   await new Promise((resolve) => setTimeout(() => resolve(), 500))
 })
 
-describe("Testing AuthController", () => {
-  describe("POST /sign_up", () => {
+describe("Testing Auth Controller", () => {
+  describe("POST /auth/sign_up", () => {
     it("response should have the Create userData", () => {
-      const userData: UserSignUpDto = {
-        email: "s2232a5w232131@mail.ru",
+      const userData = {
+        login: "s2232a5w232131@mail.ru",
         password: "11111",
         name: "devs9"
       }
@@ -34,4 +33,3 @@ describe("Testing AuthController", () => {
     })
   })
 })
-

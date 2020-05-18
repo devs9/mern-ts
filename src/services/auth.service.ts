@@ -4,13 +4,12 @@ import jwt from "jsonwebtoken"
 
 import {AppError} from "../app"
 import {UserModel} from "../models"
-import {UserSignInDto, UserSignUpDto} from "../validations"
 import {IUser, dataIDT, tokenDataT} from "@TS/Models"
 
 export default class AuthService {
   public users = UserModel
 
-  public async sign_in(userData: UserSignInDto): Promise<{cookie: string; findUser: IUser}> {
+  public async sign_in(userData: Partial<IUser>): Promise<{cookie: string; findUser: IUser}> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findLogin: IUser = await this.users.findOne({login: userData.login})
@@ -29,7 +28,7 @@ export default class AuthService {
     return {cookie, findUser}
   }
 
-  public async sign_up(userData: UserSignUpDto): Promise<IUser> {
+  public async sign_up(userData: Partial<IUser>): Promise<IUser> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
     const {email, login} = userData
 

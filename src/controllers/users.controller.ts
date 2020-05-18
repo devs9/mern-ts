@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express"
 
-import {UserSignUpDto} from "../validations"
 import UserService from "../services/users.service"
 import {IUser} from "@TS/Models"
 
@@ -28,10 +27,8 @@ export default class UsersController {
   }
 
   public createUser = async (req: Request, res: Response, next: NextFunction) => {
-    const userData: UserSignUpDto = req.body
-
     try {
-      const createUserData: IUser = await this.userService.createUser(userData)
+      const createUserData: IUser = await this.userService.createUser(req.body)
       res.status(201).json({data: createUserData, message: "created"})
     } catch (error) {
       next(error)

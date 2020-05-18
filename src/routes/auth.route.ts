@@ -18,7 +18,7 @@ export default class AuthRoute implements IRoutes {
   private initializeRoutes() {
     this.router.post(
       `${this.path}/sign_in`,
-      [authMiddleware, Validate(this.userValid.sign_in())],
+      [Validate(this.userValid.sign_in())],
       this.authController.sign_in
     )
 
