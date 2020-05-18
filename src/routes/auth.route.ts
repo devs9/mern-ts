@@ -8,6 +8,7 @@ import {IRoutes} from "@TS/Routes"
 export default class AuthRoute implements IRoutes {
   public path = "/api/auth"
   public router = Router()
+  public userValid = new UserSchema()
   public authController = new AuthController()
 
   constructor() {
@@ -17,13 +18,13 @@ export default class AuthRoute implements IRoutes {
   private initializeRoutes() {
     this.router.post(
       `${this.path}/sign_in`,
-      [authMiddleware, Validate(UserSchema.signIn)],
+      [authMiddleware, Validate(this.userValid.sign_in())],
       this.authController.sign_in
     )
 
     this.router.post(
       `${this.path}/sign_up`,
-      Validate(UserSchema.signUp),
+      [Validate(this.userValid.sign_up())],
       this.authController.signUp
     )
 

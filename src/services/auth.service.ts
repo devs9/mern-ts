@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt"
+import {isEmpty} from "lodash"
 import jwt from "jsonwebtoken"
 
 import {AppError} from "../app"
 import {UserModel} from "../models"
-import {isEmptyObject} from "../utils"
 import {UserSignInDto, UserSignUpDto} from "../validations"
 import {IUser, dataIDT, tokenDataT} from "@TS/Models"
 
@@ -11,7 +11,7 @@ export default class AuthService {
   public users = UserModel
 
   public async sign_in(userData: UserSignInDto): Promise<{cookie: string; findUser: IUser}> {
-    if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
+    if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findLogin: IUser = await this.users.findOne({login: userData.login})
     if (!findLogin) throw new AppError(409, `You're login ${userData.login} not found`)
@@ -30,7 +30,7 @@ export default class AuthService {
   }
 
   public async sign_up(userData: UserSignUpDto): Promise<IUser> {
-    if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
+    if (isEmpty(userData)) throw new AppError(400, "You're not userData")
     const {email, login} = userData
 
     const findUser: IUser = await this.users.findOne({email})
@@ -48,7 +48,7 @@ export default class AuthService {
   }
 
   public async logout(userData: IUser): Promise<IUser> {
-    if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
+    if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findUser: IUser = await this.users.findOne({password: userData.password})
     if (!findUser) throw new AppError(409, "You're not user")

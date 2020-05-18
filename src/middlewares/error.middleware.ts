@@ -13,5 +13,6 @@ export default async function appError(
     status: "error",
     message
   })
+
   next()
 }
