@@ -1,8 +1,9 @@
 import {Router} from "express"
-import UsersController from "../controllers/users.controller"
-import Route from "../interfaces/routes.interface"
 
-class UsersRoute implements Route {
+import {UsersController} from "../controllers"
+import {IRoutes} from "../interfaces"
+
+export default class UsersRoute implements IRoutes {
   public path = "/api/users"
   public router = Router()
   public usersController = new UsersController()
@@ -31,5 +32,3 @@ class UsersRoute implements Route {
     this.router.delete(`${this.path}/:id`, this.usersController.deleteUser)
   }
 }
-
-export default UsersRoute

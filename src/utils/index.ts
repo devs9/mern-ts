@@ -1,5 +1,2 @@
-import logger from "./logger"
-import validateEnv from "./validateEnv"
-
+export {default} from "./logger"
 export * from "./util"
-export {logger, validateEnv}

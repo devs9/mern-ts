@@ -1,10 +1,9 @@
 import bcrypt from "bcrypt"
-import jwt from "jsonwebtoken"
 
+import {AppError} from "../app"
 import {UserModel} from "../models"
-import AppError from "../app/appError"
 import {isEmptyObject} from "../utils"
-import {CreateUserDto} from "../validations/dtos/users.dto"
+import {UserSignUpDto} from "../validations"
 import {IUser} from "../interfaces"
 
 class UserService {
@@ -22,7 +21,7 @@ class UserService {
     return findUser
   }
 
-  public async createUser(userData: CreateUserDto): Promise<IUser> {
+  public async createUser(userData: UserSignUpDto): Promise<IUser> {
     if (isEmptyObject(userData)) throw new AppError(400, "You're not userData")
 
     const findUser: IUser = await this.users.findOne({email: userData.email})

@@ -1,14 +1,14 @@
 import {NextFunction, Request, Response} from "express"
-import {CreateUserDto} from "../validations/dtos/users.dto"
-import AuthService from "../services/auth.service"
-import {RequestWithUser} from "../interfaces/auth.interface"
-import {IUser} from "../interfaces"
 
-class AuthController {
+import {UserSignUpDto, UserSignInDto} from "../validations"
+import AuthService from "../services/auth.service"
+import {IUser, IReqWithUser} from "../interfaces"
+
+export default class AuthController {
   public authService = new AuthService()
 
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
-    const userData: CreateUserDto = req.body
+    const userData: UserSignUpDto = req.body
 
     try {
       const signUpUserData: IUser = await this.authService.sign_up({
@@ -26,7 +26,7 @@ class AuthController {
   }
 
   public sign_in = async (req: Request, res: Response, next: NextFunction) => {
-    const userData: CreateUserDto = req.body
+    const userData: UserSignInDto = req.body
 
     try {
       const {cookie, findUser} = await this.authService.sign_in(userData)
@@ -37,7 +37,7 @@ class AuthController {
     }
   }
 
-  public logOut = async (req: RequestWithUser, res: Response, next: NextFunction) => {
+  public logOut = async (req: IReqWithUser, res: Response, next: NextFunction) => {
     const userData: IUser = req.user
 
     try {
@@ -49,5 +49,3 @@ class AuthController {
     }
   }
 }
-
-export default AuthController

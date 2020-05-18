@@ -1,8 +1,7 @@
 import App from "./app"
-import UsersRoute from "./routes/users.route"
-import AuthRoute from "./routes/auth.route"
+import * as Routes from "./routes"
 
-const server = new App([new AuthRoute(), new UsersRoute()])
+const server = new App([new Routes.auth(), new Routes.user()])
 
 server.reactApp()
 server.listen()

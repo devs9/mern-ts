@@ -1,6 +1,6 @@
 import {Request, Response, NextFunction} from "express"
 import {ObjectSchema} from "hapi__joi"
-import AppError from "../app/appError"
+import {AppError} from "../app"
 
 export default function validate(schema: ObjectSchema) {
   return function (req: Request, res: Response, next: NextFunction) {

@@ -1,43 +1,32 @@
 import hpp from "hpp"
 import cors from "cors"
 import helmet from "helmet"
-import dotenv from "dotenv"
 import morgan from "morgan"
-import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
 import express, {Application} from "express"
 
-import {validateEnv, logger} from "../utils"
-import {envDev, buildPath, htmlPath} from "../constants"
-import appError from "../middlewares/error.middleware"
-import Routes from "../interfaces/routes.interface"
+import logger from "../utils"
+import {Path} from "../constants"
+import {dbConfig, envConfig} from "../config"
+import {appError} from "../middlewares"
+import {IRoutes} from "../interfaces"
 
 export default class App {
   public app: Application
   public port: string | number
   public env: boolean
 
-  constructor(routes: Routes[]) {
-    App.setEnv()
+  constructor(routes: IRoutes[]) {
+    envConfig()
     this.app = express()
     this.port = process.env.PORT || 3000
     this.env = process.env.NODE_ENV === "production"
 
+    dbConfig()
     this.appConfig()
-    this.connectToDatabase()
     this.initMiddleware()
     this.initializeRoutes(routes)
     this.errorHandlingConfig()
-  }
-
-  private static setEnv() {
-    if (process.env.NODE_ENV === "production") {
-      dotenv.config({path: envDev})
-    } else {
-      dotenv.config({path: envDev})
-    }
-
-    validateEnv()
   }
 
   public listen() {
@@ -50,7 +39,7 @@ export default class App {
 
   public reactApp() {
     this.app.get("*", (req, res) => {
-      res.sendFile(htmlPath)
+      res.sendFile(Path.htmlPath)
     })
   }
 
@@ -61,7 +50,7 @@ export default class App {
   private appConfig() {
     this.app.use(cookieParser())
     this.app.use(express.json())
-    this.app.use(express.static(buildPath))
+    this.app.use(express.static(Path.buildPath))
     this.app.use(express.urlencoded({extended: true}))
   }
 
@@ -77,7 +66,7 @@ export default class App {
     }
   }
 
-  private initializeRoutes(routes: Routes[]) {
+  private initializeRoutes(routes: IRoutes[]) {
     routes.forEach((route) => {
       this.app.use("/", route.router)
     })
@@ -85,22 +74,5 @@ export default class App {
 
   private errorHandlingConfig() {
     this.app.use(appError)
-  }
-
-  private connectToDatabase() {
-    const {MONGO_URI} = process.env
-    const options = {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false
-    }
-
-    mongoose.connect(`mongodb://${MONGO_URI}`, {...options})
-    mongoose.connection.on("error", () => {
-      logger.error("🔥 Error connect to DB 🟥")
-      process.exit(1)
-    })
-    mongoose.connection.once("open", () => logger.info("✅  Success connect to DB ✅ "))
   }
 }
