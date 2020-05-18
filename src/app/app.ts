@@ -1,16 +1,14 @@
 import hpp from "hpp"
 import cors from "cors"
 import helmet from "helmet"
-import dotenv from "dotenv"
 import morgan from "morgan"
-import mongoose from "mongoose"
 import cookieParser from "cookie-parser"
 import express, {Application} from "express"
 
 import logger from "../utils"
 import {Path} from "../constants"
+import {dbConfig, envConfig} from "../config"
 import {appError} from "../middlewares"
-import {validateEnv} from "../validations"
 import {IRoutes} from "../interfaces"
 
 export default class App {
@@ -19,38 +17,16 @@ export default class App {
   public env: boolean
 
   constructor(routes: IRoutes[]) {
-    App.processEnvConfig()
+    envConfig()
     this.app = express()
     this.port = process.env.PORT || 3000
     this.env = process.env.NODE_ENV === "production"
 
+    dbConfig()
     this.appConfig()
-    this.connectToDatabase()
     this.initMiddleware()
     this.initializeRoutes(routes)
     this.errorHandlingConfig()
-  }
-
-  private static processEnvConfig() {
-    switch (process.env.NODE_ENV) {
-      case "production": {
-        dotenv.config({path: Path.envProd})
-        validateEnv()
-        break
-      }
-
-      case "development": {
-        dotenv.config({path: Path.envTest})
-        validateEnv()
-        break
-      }
-
-      default: {
-        dotenv.config({path: Path.envDev})
-        validateEnv()
-        break
-      }
-    }
   }
 
   public listen() {
@@ -98,22 +74,5 @@ export default class App {
 
   private errorHandlingConfig() {
     this.app.use(appError)
-  }
-
-  private connectToDatabase() {
-    const {MONGO_URI} = process.env
-    const options = {
-      useCreateIndex: true,
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false
-    }
-
-    mongoose.connect(`${MONGO_URI}`, options)
-    mongoose.connection.on("error", () => {
-      logger.error("🔥 Error connect to DB 🟥")
-      process.exit(1)
-    })
-    mongoose.connection.once("open", () => logger.info("✅  Success connect to DB ✅ "))
   }
 }
