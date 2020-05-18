@@ -17,6 +17,7 @@ describe("Testing AuthController", () => {
     it("response should have the Create userData", () => {
       const userData: CreateUserDto = {
         email: "lkm@gmail.com",
+        name: "dssrh",
         password: "q1w2e3r4"
       }
 
@@ -40,6 +41,7 @@ describe("Testing AuthController", () => {
     it("response should have the Set-Cookie header with the Authorization token", async () => {
       const userData: CreateUserDto = {
         email: "lkm@gmail.com",
+        name: "dssrh",
         password: "q1w2e3r4"
       }
       process.env.JWT_SECRET = "jwt_secret"
@@ -93,6 +95,7 @@ describe("Testing AuthService", () => {
       it("should throw an error", async () => {
         const userData: CreateUserDto = {
           email: "lkm@gmail.com",
+          name: "dssrh",
           password: "q1w2e3r4"
         }
 
@@ -100,7 +103,7 @@ describe("Testing AuthService", () => {
 
         authService.users.findOne = jest.fn().mockReturnValue(Promise.resolve(userData))
 
-        await expect(authService.signup(userData)).rejects.toMatchObject(
+        await expect(authService.sign_up(userData)).rejects.toMatchObject(
           new AppError(400, `User with email ${userData.email} already exists`)
         )
       })
@@ -110,6 +113,7 @@ describe("Testing AuthService", () => {
       it("should not throw an error", async () => {
         const userData: CreateUserDto = {
           email: "lkm@gmail.com",
+          name: "dssrh",
           password: "q1w2e3r4"
         }
         process.env.JWT_SECRET = "jwt_secret"
@@ -120,7 +124,7 @@ describe("Testing AuthService", () => {
 
         authService.users.create = jest.fn().mockReturnValue({_id: 0, ...userData})
 
-        await expect(authService.signup(userData)).resolves.toBeDefined()
+        await expect(authService.sign_up(userData)).resolves.toBeDefined()
       })
     })
   })

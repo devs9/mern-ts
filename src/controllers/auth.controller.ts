@@ -11,7 +11,10 @@ class AuthController {
     const userData: CreateUserDto = req.body
 
     try {
-      const signUpUserData: IUser = await this.authService.signup(userData)
+      const signUpUserData: IUser = await this.authService.sign_up({
+        ...userData,
+        login: userData.login || userData.email
+      })
       res.status(201).json({data: signUpUserData, message: "signup"})
     } catch (error) {
       next(error)

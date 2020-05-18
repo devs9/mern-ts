@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken"
 import {NextFunction, Response} from "express"
 
+import {UserModel} from "../models"
 import AppError from "../app/appError"
-import userModel from "../models/users.model"
 import {DataStoredInToken, RequestWithUser} from "../interfaces/auth.interface"
 
 export default async function authMiddleware(
@@ -18,7 +18,7 @@ export default async function authMiddleware(
     try {
       const verificationResponse = jwt.verify(cookies.Authorization, secret) as DataStoredInToken
       const userId = verificationResponse._id
-      const findUser = await userModel.findById(userId)
+      const findUser = await UserModel.findById(userId)
 
       if (findUser) {
         req.user = findUser
