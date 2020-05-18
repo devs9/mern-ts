@@ -2,10 +2,10 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 
 import {AppError} from "../app"
-import {UserModel} from "../models"
 import {isEmptyObject} from "../utils"
+import {UserModel} from "../models"
 import {UserSignInDto, UserSignUpDto} from "../validations"
-import {IUser, dataIDT, tokenDataT} from "../interfaces"
+import {IUser, dataIDT, tokenDataT} from "@TS/Models"
 
 class AuthService {
   public users = UserModel

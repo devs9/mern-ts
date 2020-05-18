@@ -1,6 +1,7 @@
 // import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import request from 'supertest';
+
 import App from '../app';
 import AuthRoute from '../routes/auth.route';
 import {UserSignUpDto} from '../validations';

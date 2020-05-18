@@ -1,2 +1,2 @@
-export {default} from "./app"
+export {default} from "./App"
 export {default as AppError} from "./appError"

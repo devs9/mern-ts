@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from "express"
 
 import {UserSignUpDto} from "../validations"
-import {IUser} from "../interfaces"
 import UserService from "../services/users.service"
+import {IUser} from "@TS/Models"
 
 export default class UsersController {
   public userService = new UserService()

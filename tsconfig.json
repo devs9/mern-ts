@@ -3,7 +3,7 @@
     "sourceMap": true,
     "target": "es2017",
     "outDir": "dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "alwaysStrict": true,
     "noImplicitAny": true,
     "module": "commonjs",
@@ -12,13 +12,22 @@
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "typeRoots": [
-      "./node_modules/@types"
-    ],
     "paths": {
+//      "@app/*": ["./src/app/*"],
+//      "@tests/*": ["./src/tests/*"],
+//      "@config/*": ["./src/config/*"],
+//      "@utils/*": ["./src/utils/*"],
+//      "@models/*": ["./src/models/*"],
+//      "@routes/*": ["./src/routes/*"],
+//      "@schemas/*": ["./src/schemas/*"],
+//      "@services/*": ["./src/services/*"],
+//      "@constants/*": ["./src/constants/*"],
+//      "@validations/*": ["./src/validations/*"],
+//      "@controllers/*": ["./src/controllers/*"],
+//      "@middlewares/*": ["./src/middlewares/*"],
+      "@TS/*": ["./src/interfaces/*"],
       "*": [
-        "src/interfaces/*",
-        "node_modules/*"
+        "./node_modules/@types"
       ]
     }
   },

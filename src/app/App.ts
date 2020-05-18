@@ -7,9 +7,9 @@ import express, {Application} from "express"
 
 import logger from "../utils"
 import {Path} from "../constants"
-import {dbConfig, envConfig} from "../config"
 import {appError} from "../middlewares"
-import {IRoutes} from "../interfaces"
+import {dbConfig, envConfig} from "../config"
+import {IRoutes} from "@TS/Routes"
 
 export default class App {
   public app: Application

@@ -1,5 +1,5 @@
 import {connect, connection} from "mongoose"
-import logger from "../utils"
+import logger from "../utils/logger"
 
 export default function dbConfig() {
   const {MONGO_URI} = process.env

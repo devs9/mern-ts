@@ -1,7 +1,7 @@
 import {Router} from "express"
 
 import {UsersController} from "../controllers"
-import {IRoutes} from "../interfaces"
+import {IRoutes} from "@TS/Routes"
 
 export default class UsersRoute implements IRoutes {
   public path = "/api/users"

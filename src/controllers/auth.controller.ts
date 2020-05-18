@@ -1,8 +1,8 @@
 import {NextFunction, Request, Response} from "express"
 
-import {UserSignUpDto, UserSignInDto} from "../validations"
 import AuthService from "../services/auth.service"
-import {IUser, IReqWithUser} from "../interfaces"
+import {UserSignUpDto, UserSignInDto} from "../validations"
+import {IUser, IReqWithUser} from "@TS/Models"
 
 export default class AuthController {
   public authService = new AuthService()

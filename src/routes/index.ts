@@ -1,2 +1,2 @@
-export {default as auth} from "./auth.route"
-export {default as user} from "./users.route"
+export {default as AuthRoute} from "./auth.route"
+export {default as UsersRoute} from "./users.route"
