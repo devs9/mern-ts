@@ -5,15 +5,11 @@ import logger from "../utils/logger"
 const connectPromisify = promisify<string, ConnectionOptions>(connect)
 export default async function dbConfig() {
   try {
-    const {MONGO_URI} = process.env
-    const options = {
+    await connectPromisify(process.env.MONGO_URI, {
       useCreateIndex: true,
       useNewUrlParser: true,
-      useFindAndModify: false,
       useUnifiedTopology: true
-    }
-
-    await connectPromisify(`${MONGO_URI}`, options)
+    })
     logger.info("✅  Success connect to DB ✅ ")
   } catch (error) {
     logger.error(`🔥 Error connect to DB 🟥 ${error} 🟥`)
