@@ -3,18 +3,16 @@
   "author": "George PolAdaShvili",
   "description": "MERN with Typescript!",
   "repository": "https://github.com/devs9/mern-ts",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "license": "MIT",
   "scripts": {
-    "build-ts": "tsc",
     "watch-ts": "tsc -w",
-    "build": "npm run build-ts",
+    "watch-node": "env NODE_ENV=development nodemon src/server.ts",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,yellow.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
-    "watch-node": "cross-env NODE_ENV=development nodemon src/server.ts",
-    "start": "cross-env NODE_ENV=production ts-node --transpile-only src/server.ts",
+    "start": "env NODE_ENV=production ts-node --transpile-only src/server.ts",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
     "test": "jest --forceExit --detectOpenHandles",
-    "postinstall": "npm run build"
+    "postinstall": "tsc"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
@@ -23,7 +21,6 @@
     "connect-mongo": "^3.2.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "envalid": "^6.0.1",
     "express": "^4.17.1",

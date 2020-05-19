@@ -1,5 +1,4 @@
 import {Router} from "express"
-
 import {UserSchema} from "../schemas"
 import {AuthController} from "../controllers"
 import {Validate, authMiddleware} from "../middlewares"

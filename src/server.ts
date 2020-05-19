@@ -1,7 +1,7 @@
 import App from "./app"
 import * as Routes from "./routes"
 
-const server = new App([new Routes.AuthRoute(), new Routes.UsersRoute()])
+const Server = new App([new Routes.AuthRoute()])
 
-server.reactApp()
-server.listen()
+Server.reactApp()
+Server.listen()

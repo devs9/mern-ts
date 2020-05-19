@@ -15,15 +15,13 @@ import {IRoutes} from "@TS/Routes"
 export default class App {
   public app: Application
   public port: string | number
-  public env: boolean
 
   constructor(routes: IRoutes[]) {
     envConfig()
     this.app = express()
     this.port = process.env.PORT
-    this.env = process.env.NODE_ENV === "production"
-
     dbConnect()
+
     this.appConfig()
     this.initMiddleware()
     this.initializeRoutes(routes)
@@ -58,7 +56,7 @@ export default class App {
   }
 
   private initMiddleware() {
-    if (this.env) {
+    if (process.env.NODE_ENV === "production") {
       this.app.use(hpp())
       this.app.use(helmet())
       this.app.use(morgan("combined"))
