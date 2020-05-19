@@ -47,11 +47,11 @@ export default class App {
   }
 
   private appConfig() {
+    this.app.use(compression({level: 6}))
     this.app.use(cookieParser())
     this.app.use(express.json())
     this.app.use(express.static(Path.buildPath))
     this.app.use(express.urlencoded({extended: true}))
-    this.app.use(compression({level: 7}))
     this.app.use(sessionConfig())
   }
 
