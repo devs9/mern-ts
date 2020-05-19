@@ -1,4 +1,4 @@
-import {trim} from "lodash"
+import {trim, pick} from "lodash"
 import bcrypt from "bcrypt"
 
 import {NextFunction, Request, Response} from "express"
@@ -11,9 +11,10 @@ export default class AuthController {
   public sign_in = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {cookie, findUser} = await this.authService.sign_in(req.body)
+      const data = pick(findUser, ["email", "login", "profile"])
 
       res.setHeader("Set-Cookie", [cookie])
-      res.status(200).json({data: findUser, status: "Success! sign_in"})
+      res.status(200).json({data, status: "Success! sign_in"})
     } catch (error) {
       next(error)
     }
@@ -27,11 +28,12 @@ export default class AuthController {
       const fullName = `${trim(userData.name)} ${trim(userData.lastName || "")}`
       const newUser = {...userData, login, password, profile: {fullName}}
       const signUpUserData: IUser = await this.authService.sign_up(newUser)
+      const data = pick(signUpUserData, ["email", "login", "profile"])
       const tokenData = this.authService.createToken(signUpUserData)
       const cookie = this.authService.createCookie(tokenData)
 
       res.setHeader("Set-Cookie", [cookie])
-      res.status(201).json({data: signUpUserData, status: "Success! sign_up"})
+      res.status(201).json({data, status: "Success! sign_up"})
     } catch (error) {
       next(error)
     }
@@ -40,9 +42,10 @@ export default class AuthController {
   public logOut = async (req: IReqWithUser, res: Response, next: NextFunction) => {
     try {
       const logOutUserData: IUser = await this.authService.logout(req.user)
+      const data = pick(logOutUserData, ["email", "login", "profile"])
 
       res.setHeader("Set-Cookie", ["Authorization=; Max-age=0"])
-      res.status(200).json({data: logOutUserData, message: "logout"})
+      res.status(200).json({data, message: "logout"})
     } catch (error) {
       next(error)
     }
