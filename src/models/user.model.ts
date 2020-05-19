@@ -1,5 +1,4 @@
 import {Schema, Document, model} from "mongoose"
-import {NextFunction} from "express"
 import {IUser} from "@TS/Models"
 
 const userSchema = new Schema(

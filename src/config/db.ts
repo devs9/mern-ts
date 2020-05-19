@@ -1,5 +1,5 @@
-import {connect, ConnectionOptions} from "mongoose"
 import {promisify} from "util"
+import {connect, ConnectionOptions} from "mongoose"
 import logger from "../utils/logger"
 
 const connectPromisify = promisify<string, ConnectionOptions>(connect)

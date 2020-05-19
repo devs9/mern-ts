@@ -25,12 +25,8 @@ export default class AuthController {
       const login = userData.login || userData.email
       const password = await bcrypt.hash(userData.password, 10)
       const fullName = `${trim(userData.name)} ${trim(userData.lastName || "")}`
-      const signUpUserData: IUser = await this.authService.sign_up({
-        ...userData,
-        profile: {fullName},
-        password,
-        login
-      })
+      const newUser = {...userData, login, password, profile: {fullName}}
+      const signUpUserData: IUser = await this.authService.sign_up(newUser)
       const tokenData = this.authService.createToken(signUpUserData)
       const cookie = this.authService.createCookie(tokenData)
 

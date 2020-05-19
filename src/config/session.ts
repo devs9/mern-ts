@@ -2,13 +2,10 @@ import MongoStore from "connect-mongo"
 import session from "express-session"
 import {connection} from "mongoose"
 
-const mongoDBStore = MongoStore(session)
-const mongoStore = new mongoDBStore({mongooseConnection: connection})
+export default function sessionConfig() {
+  const mongoDBStore = MongoStore(session)
+  const mongoStore = new mongoDBStore({mongooseConnection: connection})
 
-/**
- * Session
- */
-export function sessionConfig() {
   return session({
     resave: false,
     store: mongoStore,
