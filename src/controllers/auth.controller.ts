@@ -1,5 +1,7 @@
-import {NextFunction, Request, Response} from "express"
+import {trim} from "lodash"
+import bcrypt from "bcrypt"
 
+import {NextFunction, Request, Response} from "express"
 import AuthService from "../services/auth.service"
 import {IUser, IReqWithUser} from "@TS/Models"
 
@@ -9,6 +11,7 @@ export default class AuthController {
   public sign_in = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {cookie, findUser} = await this.authService.sign_in(req.body)
+
       res.setHeader("Set-Cookie", [cookie])
       res.status(200).json({data: findUser, status: "Success! sign_in"})
     } catch (error) {
@@ -19,9 +22,14 @@ export default class AuthController {
   public signUp = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userData = req.body
+      const login = userData.login || userData.email
+      const password = await bcrypt.hash(userData.password, 10)
+      const fullName = `${trim(userData.name)} ${trim(userData.lastName || "")}`
       const signUpUserData: IUser = await this.authService.sign_up({
         ...userData,
-        login: userData.login || userData.email
+        profile: {fullName},
+        password,
+        login
       })
       const tokenData = this.authService.createToken(signUpUserData)
       const cookie = this.authService.createCookie(tokenData)

@@ -1,15 +1,15 @@
 import bcrypt from "bcrypt"
-import {isEmpty} from "lodash"
 import jwt from "jsonwebtoken"
+import {isEmpty} from "lodash"
 
 import {AppError} from "../app"
 import {UserModel} from "../models"
-import {IUser, dataIDT, tokenDataT} from "@TS/Models"
+import {IUser, IAuthSignInDTO, IAuthSignUpDTO, dataIDT, tokenDataT} from "@TS/Models"
 
 export default class AuthService {
   public users = UserModel
 
-  public async sign_in(userData: Partial<IUser>): Promise<{cookie: string; findUser: IUser}> {
+  public async sign_in(userData: IAuthSignInDTO): Promise<{cookie: string; findUser: IUser}> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findLogin: IUser = await this.users.findOne({login: userData.login})
@@ -28,22 +28,16 @@ export default class AuthService {
     return {cookie, findUser}
   }
 
-  public async sign_up(userData: Partial<IUser>): Promise<IUser> {
+  public async sign_up(userData: IAuthSignUpDTO): Promise<IUser> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
-    const {email, login} = userData
 
-    const findUser: IUser = await this.users.findOne({email})
-    if (findUser) throw new AppError(409, `You're email ${email} already exists`)
+    const findUser: IUser = await this.users.findOne({email: userData.email})
+    if (findUser) throw new AppError(409, `You're email ${userData.email} already exists`)
 
-    const findLogin: IUser = await this.users.findOne({login})
-    if (findLogin) throw new AppError(409, `You're login ${login} already exists`)
+    const findLogin: IUser = await this.users.findOne({login: userData.login})
+    if (findLogin) throw new AppError(409, `You're login ${userData.login} already exists`)
 
-    const hashedPassword = await bcrypt.hash(userData.password, 10)
-
-    return await this.users.create({
-      ...userData,
-      password: hashedPassword
-    })
+    return await this.users.create(userData)
   }
 
   public async logout(userData: IUser): Promise<IUser> {

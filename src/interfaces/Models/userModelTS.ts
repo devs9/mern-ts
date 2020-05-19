@@ -29,9 +29,25 @@ export interface IUser {
     gender: string
     website: string
     location: string
+    fullName: string
   }
 }
 
 export interface IReqWithUser extends Request {
   user: IUser
+}
+
+export interface IAuthSignInDTO {
+  login: string
+  password: string
+}
+
+export interface IAuthSignUpDTO {
+  name: string
+  email: string
+  password: string
+  repeatPassword: string
+
+  login?: string
+  lastName?: string
 }
