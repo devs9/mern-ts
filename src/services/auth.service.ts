@@ -4,12 +4,14 @@ import {isEmpty} from "lodash"
 
 import {AppError} from "../app"
 import {UserModel} from "../models"
-import {IUser, IAuthSignInDTO, IAuthSignUpDTO, dataIDT, tokenDataT} from "@TS/Models"
+import {IAuthSignInDTO, IAuthSignUpDTO, IUser, tokenDataT, dataIDT} from "@TS/Models"
 
 export default class AuthService {
   public users = UserModel
 
-  public async sign_in(userData: IAuthSignInDTO): Promise<{cookie: string; findUser: IUser}> {
+  public async sign_in(
+    userData: IAuthSignInDTO
+  ): Promise<{token: string; cookie: string; findUser: IUser}> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findLogin: IUser = await this.users.findOne({login: userData.login})
@@ -25,10 +27,12 @@ export default class AuthService {
     const tokenData = this.createToken(findUser)
     const cookie = this.createCookie(tokenData)
 
-    return {cookie, findUser}
+    return {token: tokenData.token, cookie, findUser}
   }
 
-  public async sign_up(userData: IAuthSignUpDTO): Promise<IUser> {
+  public async sign_up(
+    userData: IAuthSignUpDTO
+  ): Promise<{token: string; cookie: string; user: IUser}> {
     if (isEmpty(userData)) throw new AppError(400, "You're not userData")
 
     const findUser: IUser = await this.users.findOne({email: userData.email})
@@ -37,7 +41,11 @@ export default class AuthService {
     const findLogin: IUser = await this.users.findOne({login: userData.login})
     if (findLogin) throw new AppError(409, `You're login ${userData.login} already exists`)
 
-    return await this.users.create(userData)
+    const newUser = await this.users.create(userData)
+    const tokenData = this.createToken(newUser)
+    const cookie = this.createCookie(tokenData)
+
+    return {user: newUser, token: tokenData.token, cookie}
   }
 
   public async logout(userData: IUser): Promise<IUser> {
@@ -58,6 +66,6 @@ export default class AuthService {
   }
 
   public createCookie(tokenData: tokenDataT): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
+    return `Authorization = ${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
   }
 }

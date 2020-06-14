@@ -6,13 +6,10 @@ import {UserModel} from "../models"
 import {IReqWithUser, dataIDT} from "../interfaces"
 
 export default async function authMiddleware(req: IReqWithUser, res: Response, next: NextFunction) {
-  const cookies = req.cookies
-
-  if (cookies && cookies.Authorization) {
-    const secret = process.env.JWT_SECRET
-
+  if (req.cookies["Authorization"]) {
     try {
-      const verificationResponse = jwt.verify(cookies.Authorization, secret) as dataIDT
+      const secret = process.env.JWT_SECRET
+      const verificationResponse = jwt.verify(req.cookies["Authorization"], secret) as dataIDT
       const userId = verificationResponse._id
       const findUser = await UserModel.findById(userId)
 
