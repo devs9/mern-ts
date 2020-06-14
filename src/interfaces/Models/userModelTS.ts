@@ -1,8 +1,7 @@
 import {Request} from "express"
 
 /**
- * Type Alias
- * user base types for database
+ * User base types for database and services
  */
 export type dataIDT = {_id: string}
 export type tokenDataT = {
@@ -11,12 +10,11 @@ export type tokenDataT = {
 }
 
 /**
- * Interfaces
+ * Interfaces User
  */
 export interface IUser {
   _id: string
   login: string
-  token: string
   email: string
   password: string
 
@@ -25,24 +23,29 @@ export interface IUser {
   facebook: string
 
   profile: {
-    image: string
-    gender: string
-    website: string
-    location: string
+    image?: string
+    gender?: string
     fullName: string
   }
+}
+
+export interface IUserService {
+  user: IUser
+  token: string
 }
 
 export interface IReqWithUser extends Request {
   user: IUser
 }
 
-export interface IAuthSignInDTO {
+/**
+ * DTO Interfaces for auth data
+ */
+type signInDTO = {
   login: string
   password: string
 }
-
-export interface IAuthSignUpDTO {
+type signUpDTO = {
   name: string
   email: string
   password: string
@@ -50,4 +53,9 @@ export interface IAuthSignUpDTO {
 
   login?: string
   lastName?: string
+}
+
+export interface IAuthDTO {
+  sign_in: signInDTO
+  sign_up: signUpDTO
 }

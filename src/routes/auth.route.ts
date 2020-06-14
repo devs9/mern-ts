@@ -22,13 +22,13 @@ export default class AuthRoute implements IRoutes {
     /** POST **/
     this.router.post(
       `${this.path}/sign_in`,
-      Validate(this.userValid.sign_in()),
+      Validate(this.userValid.sign_in),
       this.authController.sign_in
     )
 
     this.router.post(
       `${this.path}/sign_up`,
-      Validate(this.userValid.sign_up()),
+      Validate(this.userValid.sign_up),
       this.authController.sign_up
     )
 
