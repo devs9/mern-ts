@@ -35,9 +35,11 @@ export default class AuthController {
     }
   }
 
-  public login = async (req: IReqWithUser, res: Response, next: NextFunction) => {
+  public login = (req: IReqWithUser, res: Response, next: NextFunction) => {
     try {
-      res.status(200).json({status: "Success! login", data: userDTO(req.user)})
+      const user = userDTO(req.user)
+
+      res.status(200).json({status: "Success! login", data: user})
     } catch (error) {
       next(error)
     }
