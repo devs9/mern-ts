@@ -12,21 +12,20 @@ export type tokenDataT = {
 /**
  * Interfaces User
  */
+type profileT = {
+  image?: string
+  gender?: string
+  fullName: string
+}
+
 export interface IUser {
   _id: string
-  login: string
   email: string
   password: string
+  profile: profileT
 
-  google: string
-  twitter: string
-  facebook: string
-
-  profile: {
-    image?: string
-    gender?: string
-    fullName: string
-  }
+  login?: string
+  googleID?: string
 }
 
 export interface IUserService {

@@ -25,7 +25,7 @@ export default class AuthService {
     return {user, token: this.createToken(user).token}
   }
 
-  public async sign_up(data: IAuthDTO["sign_up"]): Promise<IUserService> {
+  public async sign_up(data: Omit<IAuthDTO["sign_up"], "profile">): Promise<IUserService> {
     if (isEmpty(data)) throw new AppError(400, "You're not userData")
 
     const findUser: IUser = await this.users.findOne({email: data.email})
@@ -48,6 +48,9 @@ export default class AuthService {
     return findUser
   }
 
+  /**
+   * Helper service methods
+   */
   public createToken(user: IUser): tokenDataT {
     const dataStoredInToken: dataIDT = {_id: user._id}
     const secret: string = process.env.JWT_SECRET
