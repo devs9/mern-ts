@@ -4,46 +4,45 @@ import {isEmpty} from "lodash"
 
 import {AppError} from "../app"
 import {UserModel} from "../models"
-import {IUser, IAuthSignInDTO, IAuthSignUpDTO, dataIDT, tokenDataT} from "@TS/Models"
+import {IUser, IUserService, IAuthDTO, tokenDataT, dataIDT} from "@TS/Models"
 
 export default class AuthService {
   public users = UserModel
 
-  public async sign_in(userData: IAuthSignInDTO): Promise<{cookie: string; findUser: IUser}> {
-    if (isEmpty(userData)) throw new AppError(400, "You're not userData")
+  public async sign_in(data: IAuthDTO["sign_in"]): Promise<IUserService> {
+    if (isEmpty(data)) throw new AppError(400, "You're not userData")
 
-    const findLogin: IUser = await this.users.findOne({login: userData.login})
-    if (!findLogin) throw new AppError(409, `You're login ${userData.login} not found`)
+    const findLogin: IUser = await this.users.findOne({login: data.login})
+    if (!findLogin) throw new AppError(409, `You're login ${data.login} not found`)
 
-    const findEmail: IUser = await this.users.findOne({email: userData.login})
-    const findUser = findLogin || findEmail
-    if (!findUser) throw new AppError(409, `You're email ${userData.login} not found`)
+    const findEmail: IUser = await this.users.findOne({email: data.login})
+    const user = findLogin || findEmail
+    if (!user) throw new AppError(409, `You're email ${data.login} not found`)
 
-    const isPasswordMatching: boolean = await bcrypt.compare(userData.password, findUser.password)
+    const isPasswordMatching: boolean = await bcrypt.compare(data.password, user.password)
     if (!isPasswordMatching) throw new AppError(409, "You're password not matching")
 
-    const tokenData = this.createToken(findUser)
-    const cookie = this.createCookie(tokenData)
-
-    return {cookie, findUser}
+    return {user, token: this.createToken(user).token}
   }
 
-  public async sign_up(userData: IAuthSignUpDTO): Promise<IUser> {
-    if (isEmpty(userData)) throw new AppError(400, "You're not userData")
+  public async sign_up(data: IAuthDTO["sign_up"]): Promise<IUserService> {
+    if (isEmpty(data)) throw new AppError(400, "You're not userData")
 
-    const findUser: IUser = await this.users.findOne({email: userData.email})
-    if (findUser) throw new AppError(409, `You're email ${userData.email} already exists`)
+    const findUser: IUser = await this.users.findOne({email: data.email})
+    if (findUser) throw new AppError(409, `You're email ${data.email} already exists`)
 
-    const findLogin: IUser = await this.users.findOne({login: userData.login})
-    if (findLogin) throw new AppError(409, `You're login ${userData.login} already exists`)
+    const findLogin: IUser = await this.users.findOne({login: data.login})
+    if (findLogin) throw new AppError(409, `You're login ${data.login} already exists`)
 
-    return await this.users.create(userData)
+    const user = await this.users.create(data)
+
+    return {user, token: this.createToken(user).token}
   }
 
-  public async logout(userData: IUser): Promise<IUser> {
-    if (isEmpty(userData)) throw new AppError(400, "You're not userData")
+  public async logout(data: IUser): Promise<IUser> {
+    if (isEmpty(data)) throw new AppError(400, "You're not userData")
 
-    const findUser: IUser = await this.users.findOne({password: userData.password})
+    const findUser: IUser = await this.users.findOne({password: data.password})
     if (!findUser) throw new AppError(409, "You're not user")
 
     return findUser
@@ -57,7 +56,7 @@ export default class AuthService {
     return {expiresIn, token: jwt.sign(dataStoredInToken, secret, {expiresIn})}
   }
 
-  public createCookie(tokenData: tokenDataT): string {
-    return `Authorization=${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
-  }
+  // public createCookie(tokenData: tokenDataT): string {
+  //   return `Authorization = ${tokenData.token}; HttpOnly; Max-Age=${tokenData.expiresIn};`
+  // }
 }

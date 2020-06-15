@@ -1,8 +1,9 @@
-import {trim, pick} from "lodash"
-import bcrypt from "bcrypt"
-
 import {NextFunction, Request, Response} from "express"
+import bcrypt from "bcrypt"
+import {trim} from "lodash"
+
 import AuthService from "../services/auth.service"
+import {userDTO} from "../utils/dto"
 import {IUser, IReqWithUser} from "@TS/Models"
 
 export default class AuthController {
@@ -10,42 +11,45 @@ export default class AuthController {
 
   public sign_in = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {cookie, findUser} = await this.authService.sign_in(req.body)
-      const data = pick(findUser, ["email", "login", "profile"])
+      const {token, user} = await this.authService.sign_in(req.body)
 
-      res.setHeader("Set-Cookie", [cookie])
-      res.status(200).json({data, status: "Success! sign_in"})
+      res.status(200).json({status: "Success! sign_in", data: userDTO(user), token})
     } catch (error) {
       next(error)
     }
   }
 
-  public signUp = async (req: Request, res: Response, next: NextFunction) => {
+  public sign_up = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userData = req.body
-      const login = userData.login || userData.email
-      const password = await bcrypt.hash(userData.password, 10)
-      const fullName = `${trim(userData.name)} ${trim(userData.lastName || "")}`
-      const newUser = {...userData, login, password, profile: {fullName}}
-      const signUpUserData: IUser = await this.authService.sign_up(newUser)
-      const data = pick(signUpUserData, ["email", "login", "profile"])
-      const tokenData = this.authService.createToken(signUpUserData)
-      const cookie = this.authService.createCookie(tokenData)
+      const {email, name, lastName} = req.body
+      const login = req.body.login || email
+      const fullName = `${trim(name)} ${trim(lastName || "")}`
+      const profile = {fullName}
 
-      res.setHeader("Set-Cookie", [cookie])
-      res.status(201).json({data, status: "Success! sign_up"})
+      const password = await bcrypt.hash(req.body.password, 10)
+      const {user, token} = await this.authService.sign_up({...req.body, login, password, profile})
+
+      res.status(201).json({status: "Success! sign_up", data: userDTO(user), token})
     } catch (error) {
       next(error)
     }
   }
 
-  public logOut = async (req: IReqWithUser, res: Response, next: NextFunction) => {
+  public login = (req: IReqWithUser, res: Response, next: NextFunction) => {
     try {
-      const logOutUserData: IUser = await this.authService.logout(req.user)
-      const data = pick(logOutUserData, ["email", "login", "profile"])
+      const user = userDTO(req.user)
 
-      res.setHeader("Set-Cookie", ["Authorization=; Max-age=0"])
-      res.status(200).json({data, message: "logout"})
+      res.status(200).json({status: "Success! login", data: user})
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  public logout = async (req: IReqWithUser, res: Response, next: NextFunction) => {
+    try {
+      const user: IUser = await this.authService.logout(req.user)
+
+      res.status(200).json({status: "Success! logout", data: userDTO(user)})
     } catch (error) {
       next(error)
     }

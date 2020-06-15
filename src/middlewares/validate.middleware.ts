@@ -7,7 +7,7 @@ export default function validate(schema: ObjectSchema) {
     const isValid = schema.validate(req.body, {abortEarly: false})
 
     if (isValid.error) {
-      const message = isValid.error.details.map((err) => err.message).join(". \n")
+      const message = isValid.error.details.map((err) => err.message).join(". ")
 
       throw new AppError(400, message)
     }
