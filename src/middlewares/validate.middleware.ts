@@ -2,7 +2,7 @@ import {Request, Response, NextFunction} from "express"
 import {ObjectSchema} from "hapi__joi"
 import {AppError} from "../app"
 
-export default function validate(schema: ObjectSchema) {
+export function validate(schema: ObjectSchema) {
   return function (req: Request, res: Response, next: NextFunction) {
     const isValid = schema.validate(req.body, {abortEarly: false})
 
