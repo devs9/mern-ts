@@ -9,9 +9,8 @@ export default async function authMiddleware(req: IReqWithUser, res: Response, n
   if (req.cookies?.["Authorization"]) {
     try {
       const secret = process.env.JWT_SECRET
-      const verificationResponse = jwt.verify(req.cookies["Authorization"], secret) as dataIDT
-      const userId = verificationResponse._id
-      const findUser = await UserModel.findById(userId)
+      const {_id} = jwt.verify(req.cookies["Authorization"], secret) as dataIDT
+      const findUser = await UserModel.findById(_id)
 
       if (findUser) {
         req.user = findUser

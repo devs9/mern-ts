@@ -2,8 +2,8 @@ import {NextFunction, Request, Response} from "express"
 import bcrypt from "bcrypt"
 import {trim} from "lodash"
 
-import AuthService from "../services/auth.service"
 import {userDTO} from "../utils/dto"
+import {AuthService} from "../services"
 import {IUser, IReqWithUser} from "@TS/Models"
 
 export default class AuthController {
@@ -37,9 +37,9 @@ export default class AuthController {
 
   public google = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(req.body)
+      const {user, token} = await this.authService.google(req.body)
 
-      res.status(200).json({status: "Success! google", data: 1})
+      res.status(201).json({status: "Success! google", data: userDTO(user), token})
     } catch (error) {
       next(error)
     }

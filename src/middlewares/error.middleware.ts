@@ -9,7 +9,7 @@ export default async function appError(
 ) {
   const {statusCode, message} = err
 
-  res.status(statusCode).json({
+  res.status(statusCode || 500).json({
     status: "error",
     message
   })

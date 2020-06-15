@@ -17,9 +17,9 @@ export default class AuthRoute implements IRoutes {
   private initializeRoutes() {
     /** GET **/
     this.router.get(`${this.path}/login`, authMiddleware, this.authController.login)
-    this.router.get(`${this.path}/google`, this.authController.google)
 
     /** POST **/
+    this.router.post(`${this.path}/google`, this.authController.google)
     this.router.post(`${this.path}/logout`, authMiddleware, this.authController.logout)
     this.router.post(`${this.path}/sign_in`, validate(signIn), this.authController.sign_in)
     this.router.post(`${this.path}/sign_up`, validate(signUp), this.authController.sign_up)

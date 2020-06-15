@@ -25,7 +25,6 @@ export interface IUser {
   profile: profileT
 
   login?: string
-  googleID?: string
 }
 
 export interface IUserService {
@@ -53,8 +52,17 @@ type signUpDTO = {
   login?: string
   lastName?: string
 }
+type googleDTO = {
+  email: string
+  googleId: string
+  fullName: string
+  googleToken: object
+
+  image?: string
+}
 
 export interface IAuthDTO {
   sign_in: signInDTO
   sign_up: signUpDTO
+  google: googleDTO
 }

@@ -39,6 +39,39 @@ export default class AuthService {
     return {user, token: this.createToken(user).token}
   }
 
+  public async google(data: IAuthDTO["google"]): Promise<IUserService> {
+    if (isEmpty(data)) throw new AppError(400, "You're not userData")
+
+    const {email, fullName, image, googleId} = data
+    const findEmail: IUser = await this.users.findOne({email})
+
+    if (findEmail) {
+      const {token} = this.createToken(findEmail)
+
+      if (findEmail.profile?.image) {
+        return {user: findEmail, token}
+      } else {
+        const updateUser = await this.users.findByIdAndUpdate(findEmail._id, {
+          profile: {...findEmail.profile, image},
+          new: true
+        })
+
+        return {user: updateUser, token}
+      }
+    } else {
+      const password = await bcrypt.hash(googleId, 10)
+      const user = await this.users.create({
+        email,
+        password,
+        login: email,
+        profile: {image, fullName}
+      })
+      const {token} = this.createToken(user)
+
+      return {user, token}
+    }
+  }
+
   public async logout(data: IUser): Promise<IUser> {
     if (isEmpty(data)) throw new AppError(400, "You're not userData")
 
