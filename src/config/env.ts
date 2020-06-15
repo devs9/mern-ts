@@ -9,14 +9,12 @@ export default function envConfig() {
       dotenv.config({path: Path.envProd})
       break
     }
-
     case "development": {
-      dotenv.config({path: Path.envTest})
+      dotenv.config({path: Path.envDev})
       break
     }
-
     default: {
-      dotenv.config({path: Path.envDev})
+      dotenv.config({path: Path.envDefault})
       break
     }
   }

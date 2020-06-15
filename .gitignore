@@ -3,7 +3,7 @@
 node_modules
 
 # Env Variables
-env/.env.test
+env/.env.dev
 env/.env.prod
 
 # Testing Files
