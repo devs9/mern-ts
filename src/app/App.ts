@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import express, {Application} from 'express'
+import sslRedirect from 'heroku-ssl-redirect'
 
 import logger from '../utils'
 import {Path} from '../constants'
@@ -48,6 +49,7 @@ export default class App {
   }
 
   private appConfig() {
+    this.app.use(sslRedirect())
     this.app.use(cookieParser())
     this.app.use(express.json())
     this.app.use(express.static(Path.buildPath))
