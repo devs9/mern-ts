@@ -5,6 +5,7 @@ import morgan from 'morgan'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
 import express, {Application} from 'express'
+// @ts-ignore
 import sslRedirect from 'heroku-ssl-redirect'
 
 import logger from '../utils'
