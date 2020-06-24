@@ -4,9 +4,8 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import compression from 'compression'
 import cookieParser from 'cookie-parser'
-import express, {Application} from 'express'
-// @ts-ignore
 import sslRedirect from 'heroku-ssl-redirect'
+import express, {Application} from 'express'
 
 import logger from '../utils'
 import {Path} from '../constants'

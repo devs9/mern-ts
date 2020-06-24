@@ -13,14 +13,10 @@
     "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
-    "typeRoots" : ["./node_modules/@types", "./typings"],
     "paths": {
-      "@ts/*": ["src/interfaces/*"],
-      "*": [
-        "node_modules/@types"
-      ]
+      "@ts/*": ["src/interfaces/*"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "node_modules/heroku-ssl-redirect"]
+  "exclude": ["node_modules"]
 }

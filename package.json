@@ -8,7 +8,7 @@
   "scripts": {
     "build": "tsc",
     "watch-ts": "tsc -w",
-    "watch-node": "env NODE_ENV=development nodemon src/server.ts",
+    "watch-node": "env NODE_ENV=development nodemon dist/server.js",
     "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,yellow.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
     "start": "env NODE_ENV=production ts-node --transpile-only src/server.ts",
     "lint": "tsc --noEmit && eslint \"**/*.{js,ts}\" --quiet --fix",
@@ -55,7 +55,7 @@
     "@types/lodash": "^4.14.151",
     "@types/mongoose": "^5.7.20",
     "@types/morgan": "^1.9.0",
-    "@types/node": "^14.0.1",
+    "@types/node": "^14.0.14",
     "@types/supertest": "^2.0.9",
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
